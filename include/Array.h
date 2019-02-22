@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <array>
+#include <functional>
 
 namespace md {
 
@@ -21,6 +22,11 @@ public:
     Array(std::initializer_list<Type> init)
     {
         std::move(std::begin(init), std::end(init), std::begin(*this));
+    }
+
+    void fill(const T& value)
+    {
+        std::for_each(std::begin(*this), std::end(*this), std::bind(&Type::fill, std::placeholders::_1, value));
     }
 
 };
