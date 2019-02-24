@@ -24,9 +24,57 @@ public:
         std::move(std::begin(init), std::end(init), std::begin(*this));
     }
 
+    // Element access
+    using Base::at;
+
+    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    T& at(const IndexContainer& index)
+    {
+        return Base::at(get_head(index))[get_tail(index)];
+    }
+
+    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    const T& at(const IndexContainer& index) const
+    {
+        return Base::at(get_head(index))[get_tail(index)];
+    }
+
+    using Base::operator[];
+
+    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    T& operator[](const IndexContainer& index)
+    {
+        return at(index);
+    }
+
+    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    const T& operator[](const IndexContainer& index) const
+    {
+        return at(index);
+    }
+
     void fill(const T& value)
     {
         std::for_each(std::begin(*this), std::end(*this), std::bind(&Type::fill, std::placeholders::_1, value));
+    }
+
+private:
+    template <class IndexContainer>
+    static auto get_head(const IndexContainer& index)
+    {
+        return std::get<0>(index);
+    }
+
+    template <class IndexContainer>
+    static auto get_tail(const IndexContainer& index)
+    {
+        return get_tail(index, std::make_index_sequence<std::tuple_size<IndexContainer>() - 1>());
+    }
+
+    template <class IndexContainer, size_t ...Index>
+    static auto get_tail(const IndexContainer& index, std::index_sequence<Index...>)
+    {
+        return std::make_tuple(std::get<Index + 1>(index)...);
     }
 
 };
@@ -44,6 +92,34 @@ public:
         std::move(std::begin(init), std::end(init), std::begin(*this));
     }
 
+    // Element access
+    using Base::at;
+
+    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    T& at(const IndexContainer& index)
+    {
+        return Base::at(std::get<0>(index));
+    }
+
+    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    const T& at(const IndexContainer& index) const
+    {
+        return Base::at(std::get<0>(index));
+    }
+
+    using Base::operator[];
+
+    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    T& operator[](const IndexContainer& index)
+    {
+        return at(index);
+    }
+
+    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    const T& operator[](const IndexContainer& index) const
+    {
+        return at(index);
+    }
 };
 
 } // namespace md
