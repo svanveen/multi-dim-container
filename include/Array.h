@@ -27,20 +27,20 @@ public:
     // Element access
     using Base::at;
 
-    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     T& at(const IndexContainer& index)
     {
-        static_assert(std::tuple_size_v<IndexContainer> == dimensions, "Index dimension mismatch");
-        static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
-        return Base::at(get_head(index))[get_tail(index)];
+        static_assert(std::tuple_size_v<IndexContainer> == dimensions + I, "Index dimension mismatch");
+        static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
+        return Base::at(std::get<I>(index)).template at<IndexContainer, I + 1>(index);
     }
 
-    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     const T& at(const IndexContainer& index) const
     {
-        static_assert(std::tuple_size_v<IndexContainer> == dimensions, "Index dimension mismatch");
-        static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
-        return Base::at(get_head(index))[get_tail(index)];
+        static_assert(std::tuple_size_v<IndexContainer> == dimensions + I, "Index dimension mismatch");
+        static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
+        return Base::at(std::get<I>(index)).template at<IndexContainer, I + 1>(index);
     }
 
     using Base::operator[];
@@ -63,26 +63,6 @@ public:
     }
 
     static constexpr size_t dimensions = 1 + sizeof...(N);
-
-private:
-    template <class IndexContainer>
-    static auto get_head(const IndexContainer& index)
-    {
-        return std::get<0>(index);
-    }
-
-    template <class IndexContainer>
-    static auto get_tail(const IndexContainer& index)
-    {
-        return get_tail(index, std::make_index_sequence<std::tuple_size<IndexContainer>() - 1>());
-    }
-
-    template <class IndexContainer, size_t ...Index>
-    static auto get_tail(const IndexContainer& index, std::index_sequence<Index...>)
-    {
-        return std::make_tuple(std::get<Index + 1>(index)...);
-    }
-
 };
 
 template <class T, size_t N1>
@@ -101,20 +81,20 @@ public:
     // Element access
     using Base::at;
 
-    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     T& at(const IndexContainer& index)
     {
-        static_assert(std::tuple_size_v<IndexContainer> == 1, "Index dimension mismatch");
-        static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
-        return Base::at(std::get<0>(index));
+        static_assert(std::tuple_size_v<IndexContainer> == dimensions + I, "Index dimension mismatch");
+        static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
+        return Base::at(std::get<I>(index));
     }
 
-    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     const T& at(const IndexContainer& index) const
     {
-        static_assert(std::tuple_size_v<IndexContainer> == 1, "Index dimension mismatch");
-        static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
-        return Base::at(std::get<0>(index));
+        static_assert(std::tuple_size_v<IndexContainer> == dimensions + I, "Index dimension mismatch");
+        static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
+        return Base::at(std::get<I>(index));
     }
 
     using Base::operator[];
