@@ -30,12 +30,16 @@ public:
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     T& at(const IndexContainer& index)
     {
+        static_assert(std::tuple_size_v<IndexContainer> == dimensions, "Index dimension mismatch");
+        static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
         return Base::at(get_head(index))[get_tail(index)];
     }
 
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     const T& at(const IndexContainer& index) const
     {
+        static_assert(std::tuple_size_v<IndexContainer> == dimensions, "Index dimension mismatch");
+        static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
         return Base::at(get_head(index))[get_tail(index)];
     }
 
@@ -57,6 +61,8 @@ public:
     {
         std::for_each(std::begin(*this), std::end(*this), std::bind(&Type::fill, std::placeholders::_1, value));
     }
+
+    static constexpr size_t dimensions = 1 + sizeof...(N);
 
 private:
     template <class IndexContainer>
@@ -98,12 +104,16 @@ public:
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     T& at(const IndexContainer& index)
     {
+        static_assert(std::tuple_size_v<IndexContainer> == 1, "Index dimension mismatch");
+        static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
         return Base::at(std::get<0>(index));
     }
 
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     const T& at(const IndexContainer& index) const
     {
+        static_assert(std::tuple_size_v<IndexContainer> == 1, "Index dimension mismatch");
+        static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
         return Base::at(std::get<0>(index));
     }
 
@@ -120,6 +130,8 @@ public:
     {
         return at(index);
     }
+
+    static constexpr size_t dimensions = 1;
 };
 
 } // namespace md
