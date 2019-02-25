@@ -57,6 +57,23 @@ public:
         return at(index);
     }
 
+    constexpr T *data() noexcept
+    {
+        return Base::front().data();
+    }
+
+    constexpr const T *data() const noexcept
+    {
+        return Base::front().data();
+    }
+
+    // Capacity
+    constexpr size_t total_size() const noexcept
+    {
+        return N1 * (N * ...);
+    }
+
+    // Operations
     void fill(const T& value)
     {
         std::for_each(std::begin(*this), std::end(*this), std::bind(&Type::fill, std::placeholders::_1, value));
