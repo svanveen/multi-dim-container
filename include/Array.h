@@ -28,7 +28,7 @@ public:
     using Base::at;
 
     template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    T& at(const IndexContainer& index)
+    constexpr T& at(const IndexContainer& index)
     {
         static_assert(std::tuple_size_v<IndexContainer> == dimensions + I, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
@@ -36,7 +36,7 @@ public:
     }
 
     template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    const T& at(const IndexContainer& index) const
+    constexpr const T& at(const IndexContainer& index) const
     {
         static_assert(std::tuple_size_v<IndexContainer> == dimensions + I, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
@@ -46,13 +46,13 @@ public:
     using Base::operator[];
 
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    T& operator[](const IndexContainer& index)
+    constexpr T& operator[](const IndexContainer& index)
     {
         return at(index);
     }
 
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    const T& operator[](const IndexContainer& index) const
+    constexpr const T& operator[](const IndexContainer& index) const
     {
         return at(index);
     }
@@ -99,7 +99,7 @@ public:
     using Base::at;
 
     template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    T& at(const IndexContainer& index)
+    constexpr T& at(const IndexContainer& index)
     {
         static_assert(std::tuple_size_v<IndexContainer> == dimensions + I, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
@@ -107,7 +107,7 @@ public:
     }
 
     template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    const T& at(const IndexContainer& index) const
+    constexpr const T& at(const IndexContainer& index) const
     {
         static_assert(std::tuple_size_v<IndexContainer> == dimensions + I, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
@@ -117,13 +117,13 @@ public:
     using Base::operator[];
 
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    T& operator[](const IndexContainer& index)
+    constexpr T& operator[](const IndexContainer& index)
     {
         return at(index);
     }
 
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    const T& operator[](const IndexContainer& index) const
+    constexpr const T& operator[](const IndexContainer& index) const
     {
         return at(index);
     }
