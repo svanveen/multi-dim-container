@@ -128,6 +128,13 @@ public:
         return at(index);
     }
 
+    // Capacity
+    constexpr size_t total_size() const noexcept
+    {
+        return N1;
+    }
+
+
     static constexpr size_t dimensions = 1;
 };
 
