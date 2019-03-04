@@ -32,7 +32,7 @@ public:
     {
         static_assert(std::tuple_size_v<IndexContainer> == dimensions + I, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
-        return Base::at(std::get<I>(index)).template at<IndexContainer, I + 1>(index);
+        return at(std::get<I>(index)).template at<IndexContainer, I + 1>(index);
     }
 
     template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
@@ -40,7 +40,7 @@ public:
     {
         static_assert(std::tuple_size_v<IndexContainer> == dimensions + I, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
-        return Base::at(std::get<I>(index)).template at<IndexContainer, I + 1>(index);
+        return at(std::get<I>(index)).template at<IndexContainer, I + 1>(index);
     }
 
     using Base::operator[];
@@ -59,12 +59,12 @@ public:
 
     constexpr T *data() noexcept
     {
-        return Base::front().data();
+        return at(0).data();
     }
 
     constexpr const T *data() const noexcept
     {
-        return Base::front().data();
+        return at(0).data();
     }
 
     // Capacity
@@ -103,7 +103,7 @@ public:
     {
         static_assert(std::tuple_size_v<IndexContainer> == dimensions + I, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
-        return Base::at(std::get<I>(index));
+        return at(std::get<I>(index));
     }
 
     template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
@@ -111,7 +111,7 @@ public:
     {
         static_assert(std::tuple_size_v<IndexContainer> == dimensions + I, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
-        return Base::at(std::get<I>(index));
+        return at(std::get<I>(index));
     }
 
     using Base::operator[];
