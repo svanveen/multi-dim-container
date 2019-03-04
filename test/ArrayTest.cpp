@@ -6,14 +6,52 @@ using namespace testing;
 
 TEST (ArrayTest, InitEmpty)
 {
+    // check different types 1D
+    md::Array<double, 1> arr1d;
+    md::Array<float, 1> arr1f;
+    md::Array<int, 1> arr1i;
+    md::Array<char, 1> arr1c;
+    md::Array<std::string, 1> arr1s;
+
+    // check different types 2D
+    md::Array<double, 2, 2> arr2d;
+    md::Array<float, 2, 2> arr2f;
+    md::Array<int, 2, 2> arr2i;
+    md::Array<char, 2, 2> arr2c;
+    md::Array<std::string, 2, 2> arr2s;
+
+    // check different dimensions
+    md::Array<int, 3, 4, 5> arr3i;
+    md::Array<int, 4, 2, 3, 5> arr4i;
+    md::Array<int, 5, 4, 3, 2, 1> arr5i;
+
+    /// no asserts here, only for compile checking
 }
 
 TEST (ArrayTest, Init)
 {
+    const md::Array<int, 3> arr1i{1, 2, 3};
+    EXPECT_THAT(arr1i, ElementsAre(1, 2, 3));
+
+    const md::Array<int, 2, 3> arr2i{{1, 2, 3},
+                                     {4, 5, 6}};
+    EXPECT_THAT(arr2i, ElementsAre(ElementsAre(1, 2, 3),
+                                   ElementsAre(4, 5, 6)));
 }
 
 TEST (ArrayTest, Fill)
 {
+    md::Array<int, 3> arr1i;
+    arr1i.fill(42);
+    EXPECT_THAT(arr1i, Each(42));
+
+    md::Array<int, 2, 3> arr2i;
+    arr2i.fill(42);
+    EXPECT_THAT(arr2i, Each(Each(42)));
+
+    md::Array<int, 2, 3, 5> arr3i;
+    arr3i.fill(42);
+    EXPECT_THAT(arr3i, Each(Each(Each(42))));
 }
 
 TEST (ArrayTest, At)
@@ -160,4 +198,24 @@ TEST (ArrayTest, TotalSize)
 
 TEST (ArrayTest, Data)
 {
+    md::Array<int, 3> arr1i{1, 2, 3};
+    EXPECT_EQ(reinterpret_cast<size_t>(arr1i.data()), reinterpret_cast<size_t>(&arr1i));
+    EXPECT_TRUE((std::is_same_v<decltype(arr1i.data()), int *>));
+
+    md::Array<int, 2, 3> arr2i{{1, 2, 3},
+                               {4, 5, 6}};
+    EXPECT_EQ(reinterpret_cast<size_t>(arr2i.data()), reinterpret_cast<size_t>(&arr2i));
+    EXPECT_TRUE((std::is_same_v<decltype(arr2i.data()), int *>));
+}
+
+TEST (ArrayTest, ConstData)
+{
+    const md::Array<int, 3> arr1i{1, 2, 3};
+    EXPECT_EQ(reinterpret_cast<size_t>(arr1i.data()), reinterpret_cast<size_t>(&arr1i));
+    EXPECT_TRUE((std::is_same_v<decltype(arr1i.data()), const int *>));
+
+    const md::Array<int, 2, 3> arr2i{{1, 2, 3},
+                                     {4, 5, 6}};
+    EXPECT_EQ(reinterpret_cast<size_t>(arr2i.data()), reinterpret_cast<size_t>(&arr2i));
+    EXPECT_TRUE((std::is_same_v<decltype(arr2i.data()), const int *>));
 }
