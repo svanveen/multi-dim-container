@@ -196,6 +196,22 @@ TEST (ArrayTest, TotalSize)
     EXPECT_EQ(arr3i.total_size(), 24);
 }
 
+TEST (ArrayTest, Dimensions)
+{
+    const md::Array<int, 3> arr1i{1, 2, 3};
+    EXPECT_EQ(arr1i.dimensions(), 1);
+
+    const md::Array<int, 2, 3> arr2i{{1, 2, 3},
+                                     {4, 5, 6}};
+    EXPECT_EQ(arr2i.dimensions(), 2);
+
+    const md::Array<int, 2, 3, 4> arr3i{{{11, 12, 13}, {14, 15, 16}},
+                                        {{21, 22, 23}, {24, 25, 26}},
+                                        {{31, 32, 33}, {34, 35, 36}},
+                                        {{41, 42, 43}, {44, 45, 46}}};
+    EXPECT_EQ(arr3i.dimensions(), 3);
+}
+
 TEST (ArrayTest, Data)
 {
     md::Array<int, 3> arr1i{1, 2, 3};
