@@ -18,5 +18,6 @@ add_executable(container-test
     ArrayTest.cpp
 )
 
+target_link_libraries(container-test gmock)
 target_link_libraries(container-test gtest)
 target_link_libraries(container-test multi-dim-container)
