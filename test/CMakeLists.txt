@@ -13,11 +13,18 @@ if(NOT googletest_POPULATED)
     add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
 endif()
 
-add_executable(container-test
-    main.cpp
-    ArrayTest.cpp
+add_executable(container-test)
+
+target_sources(container-test
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ArrayTest.cpp
 )
 
-target_link_libraries(container-test gmock)
-target_link_libraries(container-test gtest)
-target_link_libraries(container-test multi-dim-container)
+
+target_link_libraries(container-test
+    PRIVATE
+        gmock
+        gtest
+        multi-dim-container
+)
