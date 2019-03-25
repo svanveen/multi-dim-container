@@ -32,36 +32,36 @@ public:
     // Element access
 
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    constexpr T& at(const IndexContainer& index)
+    constexpr T& at(const IndexContainer& indexContainer)
     {
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
-        return _data.at(computeIndex(index));
+        return _data.at(computeIndex(indexContainer));
     }
 
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    constexpr const T& at(const IndexContainer& index) const
+    constexpr const T& at(const IndexContainer& indexContainer) const
     {
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
-        return _data.at(computeIndex(index));
+        return _data.at(computeIndex(indexContainer));
     }
 
 
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    constexpr T& operator[](const IndexContainer& index)
+    constexpr T& operator[](const IndexContainer& indexContainer)
     {
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
-        return _data[computeIndex(index)];
+        return _data[computeIndex(indexContainer)];
     }
 
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    constexpr const T& operator[](const IndexContainer& index) const
+    constexpr const T& operator[](const IndexContainer& indexContainer) const
     {
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
-        return _data[computeIndex(index)];
+        return _data[computeIndex(indexContainer)];
     }
 
     constexpr T *data() noexcept
