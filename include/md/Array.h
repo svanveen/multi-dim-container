@@ -127,13 +127,6 @@ public:
     template <class _T, size_t ..._N> friend
     class Array;
 
-    Array() = default;
-
-    Array(std::initializer_list<T> initializerList)
-    {
-        std::move(std::begin(initializerList), std::end(initializerList), std::begin(*this));
-    }
-
     // Capacity
     constexpr size_t total_size() const noexcept
     {
