@@ -94,14 +94,22 @@ public:
 private:
     static void init(const InitializerList& initializerList, typename std::array<T, TOTAL_SIZE>::iterator& it)
     {
-        std::for_each(std::begin(initializerList), std::end(initializerList),
-                      std::bind(Array<T, N...>::init, std::placeholders::_1, std::ref(it)));
+        if constexpr (sizeof...(N) > 1) {
+            std::for_each(std::begin(initializerList), std::end(initializerList),
+                          std::bind(Array<T, N...>::init, std::placeholders::_1, std::ref(it)));
+        }
+        else {
+            std::for_each(std::begin(initializerList), std::end(initializerList),
+                          [&](const auto& subList) {
+                              it = std::move(std::begin(subList), std::end(subList), it);
+                          });
+        }
     }
 
     template <class IndexContainer, size_t Depth = 0>
     static constexpr size_t computeIndex(const IndexContainer& indexContainer)
     {
-        if constexpr (sizeof...(N) > 0) {
+        if constexpr (sizeof...(N) > 1) {
             return std::get<Depth>(indexContainer) * (TOTAL_SIZE / N1) +
                    Array<T, N...>::template computeIndex<IndexContainer, Depth + 1>(indexContainer);
         }
@@ -124,8 +132,6 @@ class Array<T, N1>
 public:
     using InitializerList = std::initializer_list<T>;
 
-    template <class _T, size_t ..._N> friend
-    class Array;
 
     // Capacity
     constexpr size_t total_size() const noexcept
@@ -136,18 +142,6 @@ public:
     constexpr size_t dimensions() const noexcept
     {
         return DIMS;
-    }
-
-private:
-    static void init(const std::initializer_list<T>& initializerList, typename std::array<T, N1>::iterator& it)
-    {
-        it = std::move(std::begin(initializerList), std::end(initializerList), it);
-    }
-
-    template <class IndexContainer, size_t Depth = 0>
-    static constexpr size_t computeIndex(const IndexContainer& indexContainer)
-    {
-        return std::get<Depth>(indexContainer);
     }
 };
 
