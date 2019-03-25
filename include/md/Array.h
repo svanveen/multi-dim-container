@@ -31,7 +31,7 @@ public:
 
     // Element access
 
-    template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     constexpr T& at(const IndexContainer& index)
     {
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
@@ -39,7 +39,7 @@ public:
         return _data.at(computeIndex(index));
     }
 
-    template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     constexpr const T& at(const IndexContainer& index) const
     {
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
@@ -119,7 +119,6 @@ template <class T, size_t N1>
 class Array<T, N1>
         : public std::array<T, N1>
 {
-    using Base = std::array<T, N1>;
     static constexpr size_t DIMS = 1;
     static constexpr size_t TOTAL_SIZE = N1;
 public:
@@ -133,39 +132,6 @@ public:
     Array(std::initializer_list<T> initializerList)
     {
         std::move(std::begin(initializerList), std::end(initializerList), std::begin(*this));
-    }
-
-    // Element access
-    using Base::at;
-
-    template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    constexpr T& at(const IndexContainer& index)
-    {
-        static_assert(std::tuple_size_v<IndexContainer> == DIMS + I, "Index dimension mismatch");
-        static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
-        return at(std::get<I>(index));
-    }
-
-    template <class IndexContainer, size_t I = 0, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    constexpr const T& at(const IndexContainer& index) const
-    {
-        static_assert(std::tuple_size_v<IndexContainer> == DIMS + I, "Index dimension mismatch");
-        static_assert(std::is_integral_v<std::tuple_element_t<I, IndexContainer>>, "Index type mismatch");
-        return at(std::get<I>(index));
-    }
-
-    using Base::operator[];
-
-    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    constexpr T& operator[](const IndexContainer& index)
-    {
-        return at(index);
-    }
-
-    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
-    constexpr const T& operator[](const IndexContainer& index) const
-    {
-        return at(index);
     }
 
     // Capacity
