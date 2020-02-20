@@ -5,6 +5,8 @@
 #include <array>
 #include <functional>
 
+#include <md/detail/View.h>
+
 namespace md {
 
 template <class T, size_t ...N>
@@ -45,6 +47,34 @@ public:
     }
 
     // Element access
+    constexpr auto at(size_t index)
+    {
+        if (index >= N1)
+        {
+            throw std::out_of_range("index out of bounds");
+        }
+        return (*this)[index];
+    }
+
+    constexpr auto at(size_t index) const
+    {
+        if (index >= N1)
+        {
+            throw std::out_of_range("index out of bounds");
+        }
+        return (*this)[index];
+    }
+
+    constexpr auto operator[](size_t index)
+    {
+        return detail::View<T, N...>{&_data[index * (N * ...)]};
+    }
+
+    constexpr auto operator[](size_t index) const
+    {
+        return detail::View<const T, N...>{&_data[index * (N * ...)]};
+    }
+
     template <class IndexContainer, class = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     constexpr T& at(const IndexContainer& indexContainer)
     {

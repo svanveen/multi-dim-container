@@ -132,6 +132,11 @@ TEST (ArrayTest, ConstAt)
     const md::Array<int, 2, 3> arr2i{{1, 2, 3},
                                      {4, 5, 6}};
 
+    // dimension wise
+    EXPECT_EQ(arr2i.at(0).at(0), 1);
+    EXPECT_EQ(arr2i.at(1).at(0), 4);
+    EXPECT_EQ(arr2i.at(1).at(2), 6);
+
     // pair
     EXPECT_EQ(arr2i.at(std::pair(0, 0)), 1);
     EXPECT_EQ(arr2i.at(std::pair(1, 0)), 4);
@@ -158,21 +163,46 @@ TEST (ArrayTest, AccessOperator)
 
     EXPECT_THAT(arr1i, ElementsAre(1, 2, 3));
 
-    md::Array<int, 2, 3> arr2i;
+    md::Array<int, 2, 4> arr2i;
+
+    // dimension wise
+    arr2i[0][0] = 1;
+    arr2i[1][0] = 2;
 
     // pair
-    arr2i[std::pair(0, 0)] = 3;
-    arr2i[std::pair(1, 0)] = 4;
+    arr2i[std::pair(0, 1)] = 3;
+    arr2i[std::pair(1, 1)] = 4;
 
     // tuple
-    arr2i[std::tuple(0, 1)] = 5;
-    arr2i[std::tuple(1, 1)] = 6;
+    arr2i[std::tuple(0, 2)] = 5;
+    arr2i[std::tuple(1, 2)] = 6;
 
     // array
-    arr2i[std::array{0, 2}] = 7;
-    arr2i[std::array{1, 2}] = 8;
+    arr2i[std::array{0, 3}] = 7;
+    arr2i[std::array{1, 3}] = 8;
 
-    ExpectElementsAre(arr2i, 3, 5, 7, 4, 6, 8);
+    ExpectElementsAre(arr2i, 1, 3, 5, 7, 2, 4, 6, 8);
+
+    md::Array<int, 3, 2, 2> arr3i;
+    // dimension wise
+    arr3i[0][0][0] = 11;
+    arr3i[0][0][1] = 12;
+    arr3i[0][1][0] = 13;
+    arr3i[0][1][1] = 14;
+
+    // tuple
+    arr3i[std::tuple(1, 0, 0)] = 21;
+    arr3i[std::tuple(1, 0, 1)] = 22;
+    arr3i[std::tuple(1, 1, 0)] = 23;
+    arr3i[std::tuple(1, 1, 1)] = 24;
+
+    // array
+    arr3i[std::array{2, 0, 0}] = 31;
+    arr3i[std::array{2, 0, 1}] = 32;
+    arr3i[std::array{2, 1, 0}] = 33;
+    arr3i[std::array{2, 1, 1}] = 34;
+
+    ExpectElementsAre(arr3i, 11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34);
 }
 
 TEST (ArrayTest, ConstAccessOperator)
@@ -185,6 +215,10 @@ TEST (ArrayTest, ConstAccessOperator)
 
     const md::Array<int, 2, 3> arr2i{{1, 2, 3},
                                      {4, 5, 6}};
+    // dimension wise
+    EXPECT_EQ(arr2i[0][0], 1);
+    EXPECT_EQ(arr2i[1][0], 4);
+    EXPECT_EQ(arr2i[1][2], 6);
 
     // pair
     EXPECT_EQ(arr2i[std::pair(0, 0)], 1);
@@ -200,15 +234,35 @@ TEST (ArrayTest, ConstAccessOperator)
     EXPECT_EQ((arr2i[std::array{0, 0}]), 1);
     EXPECT_EQ((arr2i[std::array{1, 0}]), 4);
     EXPECT_EQ((arr2i[std::array{1, 2}]), 6);
+
+    const md::Array<int, 2, 4, 3> arr3i{{{11, 12, 13}, {14, 15, 16}, {21, 22, 23}, {24, 25, 26}},
+                                        {{31, 32, 33}, {34, 35, 36}, {41, 42, 43}, {44, 45, 46}}};
+    // dimension wise
+    EXPECT_EQ(arr3i[0][0][0], 11);
+    EXPECT_EQ(arr3i[1][0][1], 32);
+    EXPECT_EQ(arr3i[1][3][2], 46);
+
+    // tuple
+    EXPECT_EQ(arr3i[std::tuple(0, 0, 0)], 11);
+    EXPECT_EQ(arr3i[std::tuple(1, 0, 1)], 32);
+    EXPECT_EQ(arr3i[std::tuple(1, 3, 2)], 46);
+
+    // array
+    EXPECT_EQ((arr3i[std::array{0, 0, 0}]), 11);
+    EXPECT_EQ((arr3i[std::array{1, 0, 1}]), 32);
+    EXPECT_EQ((arr3i[std::array{1, 3, 2}]), 46);
 }
 
 TEST(ArrayTest, RangeCheck)
 {
     md::Array<int, 2, 4> arr2i;
+
+    EXPECT_THROW(arr2i.at(3).at(6), std::out_of_range);
     EXPECT_THROW(arr2i.at(std::pair{3, 1}), std::out_of_range);
     EXPECT_THROW(arr2i.at(std::tuple{4, 5}), std::out_of_range);
     EXPECT_THROW(arr2i.at(std::array{1, 4}), std::out_of_range);
 
+    EXPECT_NO_THROW(arr2i[3][6]);
     EXPECT_NO_THROW((arr2i[std::pair{3, 1}]));
     EXPECT_NO_THROW((arr2i[std::tuple{4, 5}]));
     EXPECT_NO_THROW((arr2i[std::array{1, 4}]));
