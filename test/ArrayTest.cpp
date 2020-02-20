@@ -180,6 +180,18 @@ TEST (ArrayTest, ConstAccessOperator)
     EXPECT_EQ((arr2i[std::array{1, 2}]), 6);
 }
 
+TEST(ArrayTest, RangeCheck)
+{
+    md::Array<int, 2, 4> arr2i;
+    EXPECT_THROW(arr2i.at(std::pair{3, 1}), std::out_of_range);
+    EXPECT_THROW(arr2i.at(std::tuple{4, 5}), std::out_of_range);
+    EXPECT_THROW(arr2i.at(std::array{1, 4}), std::out_of_range);
+
+    EXPECT_NO_THROW((arr2i[std::pair{3, 1}]));
+    EXPECT_NO_THROW((arr2i[std::tuple{4, 5}]));
+    EXPECT_NO_THROW((arr2i[std::array{1, 4}]));
+}
+
 TEST (ArrayTest, TotalSize)
 {
     const md::Array<int, 3> arr1i{1, 2, 3};

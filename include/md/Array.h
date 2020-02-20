@@ -35,7 +35,7 @@ public:
     {
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
-        return _data.at(computeIndex(indexContainer));
+        return _data.at(computeIndexWithRangeCheck(indexContainer));
     }
 
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
@@ -43,7 +43,7 @@ public:
     {
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
-        return _data.at(computeIndex(indexContainer));
+        return _data.at(computeIndexWithRangeCheck(indexContainer));
     }
 
 
@@ -110,15 +110,32 @@ private:
     template <class IndexContainer, size_t Depth = 0>
     static constexpr size_t computeIndex(const IndexContainer& indexContainer)
     {
+        constexpr auto HYPERPLANE_SIZE = (N * ...);
         if constexpr (sizeof...(N) > 1)
         {
-            return std::get<Depth>(indexContainer) * (TOTAL_SIZE / N1) +
+            return std::get<Depth>(indexContainer) * HYPERPLANE_SIZE +
                    Array<T, N...>::template computeIndex<IndexContainer, Depth + 1>(indexContainer);
         }
         else
         {
-            return std::get<Depth>(indexContainer) * (TOTAL_SIZE / N1) +
+            return std::get<Depth>(indexContainer) * HYPERPLANE_SIZE +
                    std::get<Depth + 1>(indexContainer);
+        }
+    }
+
+    template <class IndexContainer>
+    static constexpr size_t computeIndexWithRangeCheck(const IndexContainer& indexContainer)
+    {
+        checkRange(indexContainer, std::make_index_sequence<DIMS>{});
+        return computeIndex(indexContainer);
+    }
+
+    template <class IndexContainer, size_t I1, size_t ...I>
+    static constexpr void checkRange(const IndexContainer& indexContainer, std::index_sequence<I1, I...>)
+    {
+        if (!(std::get<I1>(indexContainer) < N1 && ((std::get<I>(indexContainer) < N) && ...)))
+        {
+            throw std::out_of_range{"index out of bounds"};
         }
     }
 
