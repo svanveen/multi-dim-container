@@ -227,23 +227,31 @@ TEST (ArrayTest, Dimensions)
 TEST (ArrayTest, Data)
 {
     md::Array<int, 3> arr1i{1, 2, 3};
-    EXPECT_EQ(reinterpret_cast<size_t>(arr1i.data()), reinterpret_cast<size_t>(&arr1i));
-    EXPECT_TRUE((std::is_same_v<decltype(arr1i.data()), int *>));
+    EXPECT_EQ(arr1i.data()[0], 1);
+    EXPECT_EQ(arr1i.data()[1], 2);
+    EXPECT_EQ(arr1i.data()[2], 3);
+    EXPECT_TRUE((std::is_same_v<decltype(arr1i.data()), int*>));
 
     md::Array<int, 2, 3> arr2i{{1, 2, 3},
                                {4, 5, 6}};
-    EXPECT_EQ(reinterpret_cast<size_t>(arr2i.data()), reinterpret_cast<size_t>(&arr2i));
-    EXPECT_TRUE((std::is_same_v<decltype(arr2i.data()), int *>));
+    EXPECT_EQ(arr1i.data()[0], 1);
+    EXPECT_EQ(arr1i.data()[1], 2);
+    EXPECT_EQ(arr1i.data()[2], 3);
+    EXPECT_TRUE((std::is_same_v<decltype(arr2i.data()), int*>));
 }
 
 TEST (ArrayTest, ConstData)
 {
     const md::Array<int, 3> arr1i{1, 2, 3};
-    EXPECT_EQ(reinterpret_cast<size_t>(arr1i.data()), reinterpret_cast<size_t>(&arr1i));
-    EXPECT_TRUE((std::is_same_v<decltype(arr1i.data()), const int *>));
+    EXPECT_EQ(arr1i.data()[0], 1);
+    EXPECT_EQ(arr1i.data()[1], 2);
+    EXPECT_EQ(arr1i.data()[2], 3);
+    EXPECT_TRUE((std::is_same_v<decltype(arr1i.data()), const int*>));
 
     const md::Array<int, 2, 3> arr2i{{1, 2, 3},
                                      {4, 5, 6}};
-    EXPECT_EQ(reinterpret_cast<size_t>(arr2i.data()), reinterpret_cast<size_t>(&arr2i));
-    EXPECT_TRUE((std::is_same_v<decltype(arr2i.data()), const int *>));
+    EXPECT_EQ(arr1i.data()[0], 1);
+    EXPECT_EQ(arr1i.data()[1], 2);
+    EXPECT_EQ(arr1i.data()[2], 3);
+    EXPECT_TRUE((std::is_same_v<decltype(arr2i.data()), const int*>));
 }
