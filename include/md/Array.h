@@ -30,7 +30,6 @@ public:
     }
 
     // Element access
-
     template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     constexpr T& at(const IndexContainer& indexContainer)
     {
@@ -64,12 +63,12 @@ public:
         return _data[computeIndex(indexContainer)];
     }
 
-    constexpr T *data() noexcept
+    constexpr T* data() noexcept
     {
         return _data.data();
     }
 
-    constexpr const T *data() const noexcept
+    constexpr const T* data() const noexcept
     {
         return _data.data();
     }
@@ -94,11 +93,13 @@ public:
 private:
     static void init(const InitializerList& initializerList, typename std::array<T, TOTAL_SIZE>::iterator& it)
     {
-        if constexpr (sizeof...(N) > 1) {
+        if constexpr (sizeof...(N) > 1)
+        {
             std::for_each(std::begin(initializerList), std::end(initializerList),
                           std::bind(Array<T, N...>::init, std::placeholders::_1, std::ref(it)));
         }
-        else {
+        else
+        {
             std::for_each(std::begin(initializerList), std::end(initializerList),
                           [&](const auto& subList) {
                               it = std::move(std::begin(subList), std::end(subList), it);
@@ -109,11 +110,13 @@ private:
     template <class IndexContainer, size_t Depth = 0>
     static constexpr size_t computeIndex(const IndexContainer& indexContainer)
     {
-        if constexpr (sizeof...(N) > 1) {
+        if constexpr (sizeof...(N) > 1)
+        {
             return std::get<Depth>(indexContainer) * (TOTAL_SIZE / N1) +
                    Array<T, N...>::template computeIndex<IndexContainer, Depth + 1>(indexContainer);
         }
-        else {
+        else
+        {
             return std::get<Depth>(indexContainer) * (TOTAL_SIZE / N1) +
                    std::get<Depth + 1>(indexContainer);
         }
@@ -131,7 +134,6 @@ class Array<T, N1>
     static constexpr size_t TOTAL_SIZE = N1;
 public:
     using InitializerList = std::initializer_list<T>;
-
 
     // Capacity
     constexpr size_t total_size() const noexcept
