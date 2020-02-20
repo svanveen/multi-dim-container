@@ -106,7 +106,8 @@ private:
                    Array<T, N...>::template computeIndex<IndexContainer, Depth + 1>(indexContainer);
         }
         else {
-            return std::get<Depth>(indexContainer);
+            return std::get<Depth>(indexContainer) * (TOTAL_SIZE / N1) +
+                   std::get<Depth + 1>(indexContainer);
         }
     }
 
