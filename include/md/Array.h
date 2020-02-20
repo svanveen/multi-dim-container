@@ -30,7 +30,7 @@ public:
     }
 
     // Element access
-    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    template <class IndexContainer, class = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     constexpr T& at(const IndexContainer& indexContainer)
     {
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
@@ -38,7 +38,7 @@ public:
         return _data.at(computeIndexWithRangeCheck(indexContainer));
     }
 
-    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    template <class IndexContainer, class = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     constexpr const T& at(const IndexContainer& indexContainer) const
     {
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
@@ -47,7 +47,7 @@ public:
     }
 
 
-    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    template <class IndexContainer, class = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     constexpr T& operator[](const IndexContainer& indexContainer)
     {
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
@@ -55,7 +55,7 @@ public:
         return _data[computeIndex(indexContainer)];
     }
 
-    template <class IndexContainer, class Unused = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
+    template <class IndexContainer, class = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     constexpr const T& operator[](const IndexContainer& indexContainer) const
     {
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
