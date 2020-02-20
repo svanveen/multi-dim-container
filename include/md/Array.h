@@ -17,6 +17,12 @@ class Array<T, N1, N...>
 {
     static constexpr size_t DIMS = 1 + sizeof...(N);
     static constexpr size_t TOTAL_SIZE = N1 * (N * ...);
+
+public:
+    using value_type = detail::View<T, N...>;
+    using iterator = detail::Iterator<T, N1, N...>;
+    using const_iterator = detail::Iterator<const T, N1, N...>;
+
 public:
     template <class _T, size_t ..._N> friend
     class Array;
@@ -106,6 +112,26 @@ public:
         static_assert(std::tuple_size_v<IndexContainer> == DIMS, "Index dimension mismatch");
         static_assert(std::is_integral_v<std::tuple_element_t<0, IndexContainer>>, "Index type mismatch");
         return _data[computeIndex(indexContainer)];
+    }
+
+    iterator begin()
+    {
+        return iterator{std::begin(_data)};
+    }
+
+    const_iterator begin() const
+    {
+        return const_iterator{std::begin(_data)};
+    }
+
+    iterator end()
+    {
+        return iterator{std::next(std::begin(_data), N1)};
+    }
+
+    const_iterator end() const
+    {
+        return const_iterator{std::next(std::begin(_data), N1)};
     }
 
     constexpr T* data() noexcept
