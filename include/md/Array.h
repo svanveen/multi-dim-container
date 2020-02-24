@@ -29,6 +29,21 @@ public:
         init(initializerList, start);
     }
 
+    explicit Array(const std::array<T, TOTAL_SIZE>& other)
+        : _data(other)
+    {
+    }
+
+    explicit Array(const std::array<T, TOTAL_SIZE>&& other)
+        : _data(std::move(other))
+    {
+    }
+
+    explicit operator std::array<T, TOTAL_SIZE>() const
+    {
+        return _data;
+    }
+
     // Element access
     template <class IndexContainer, class = std::enable_if_t<!std::is_integral_v<IndexContainer>>>
     constexpr T& at(const IndexContainer& indexContainer)
