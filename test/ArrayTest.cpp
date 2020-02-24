@@ -4,6 +4,18 @@
 
 using namespace testing;
 
+template <class T, size_t ...N>
+auto toArray(const md::Array<T, N...>& arr)
+{
+    return static_cast<std::array<T, (N * ...)>>(arr);
+}
+
+#define ExpectElementsAre(value, expected...) \
+    EXPECT_THAT(toArray(value), ElementsAre(expected));
+
+#define ExpectAllElementsAre(value, expected) \
+    EXPECT_THAT(toArray(value), Each(expected));
+
 TEST (ArrayTest, InitEmpty)
 {
     // check different types 1D
@@ -35,8 +47,8 @@ TEST (ArrayTest, Init)
 
     const md::Array<int, 2, 3> arr2i{{1, 2, 3},
                                      {4, 5, 6}};
-//    EXPECT_THAT(arr2i, ElementsAre(ElementsAre(1, 2, 3),
-//                                   ElementsAre(4, 5, 6)));
+
+    ExpectElementsAre(arr2i, 1, 2, 3, 4, 5, 6);
 }
 
 TEST (ArrayTest, Fill)
@@ -47,11 +59,11 @@ TEST (ArrayTest, Fill)
 
     md::Array<int, 2, 3> arr2i;
     arr2i.fill(42);
-//    EXPECT_THAT(arr2i, Each(Each(42)));
+    ExpectAllElementsAre(arr2i, 42);
 
     md::Array<int, 2, 3, 5> arr3i;
     arr3i.fill(42);
-//    EXPECT_THAT(arr3i, Each(Each(Each(42))));
+    ExpectAllElementsAre(arr3i, 42);
 }
 
 TEST (ArrayTest, At)
@@ -64,26 +76,21 @@ TEST (ArrayTest, At)
 
     EXPECT_THAT(arr1i, ElementsAre(1, 2, 3));
 
-    md::Array<int, 2, 4> arr2i;
-
-    // dimension wise
-//    arr2i.at(0).at(0) = 1;
-//    arr2i.at(1).at(0) = 2;
+    md::Array<int, 2, 3> arr2i;
 
     // pair
-    arr2i.at(std::pair(0, 1)) = 3;
-    arr2i.at(std::pair(1, 1)) = 4;
+    arr2i.at(std::pair(0, 0)) = 3;
+    arr2i.at(std::pair(1, 0)) = 4;
 
     // tuple
-    arr2i.at(std::tuple(0, 2)) = 5;
-    arr2i.at(std::tuple(1, 2)) = 6;
+    arr2i.at(std::tuple(0, 1)) = 5;
+    arr2i.at(std::tuple(1, 1)) = 6;
 
     // array
-    arr2i.at(std::array{0, 3}) = 7;
-    arr2i.at(std::array{1, 3}) = 8;
+    arr2i.at(std::array{0, 2}) = 7;
+    arr2i.at(std::array{1, 2}) = 8;
 
-//    EXPECT_THAT(arr2i, ElementsAre(ElementsAre(1, 3, 5, 7),
-//                                   ElementsAre(2, 4, 6, 8)));
+    ExpectElementsAre(arr2i, 3, 5, 7, 4, 6, 8);
 }
 
 TEST (ArrayTest, ConstAt)
@@ -96,10 +103,6 @@ TEST (ArrayTest, ConstAt)
 
     const md::Array<int, 2, 3> arr2i{{1, 2, 3},
                                      {4, 5, 6}};
-    // dimension wise
-//    EXPECT_EQ(arr2i.at(0).at(0), 1);
-//    EXPECT_EQ(arr2i.at(1).at(0), 4);
-//    EXPECT_EQ(arr2i.at(1).at(2), 6);
 
     // pair
     EXPECT_EQ(arr2i.at(std::pair(0, 0)), 1);
@@ -127,26 +130,21 @@ TEST (ArrayTest, AccessOperator)
 
     EXPECT_THAT(arr1i, ElementsAre(1, 2, 3));
 
-    md::Array<int, 2, 4> arr2i;
-
-    // dimension wise
-//    arr2i[0][0] = 1;
-//    arr2i[1][0] = 2;
+    md::Array<int, 2, 3> arr2i;
 
     // pair
-    arr2i[std::pair(0, 1)] = 3;
-    arr2i[std::pair(1, 1)] = 4;
+    arr2i[std::pair(0, 0)] = 3;
+    arr2i[std::pair(1, 0)] = 4;
 
     // tuple
-    arr2i[std::tuple(0, 2)] = 5;
-    arr2i[std::tuple(1, 2)] = 6;
+    arr2i[std::tuple(0, 1)] = 5;
+    arr2i[std::tuple(1, 1)] = 6;
 
     // array
-    arr2i[std::array{0, 3}] = 7;
-    arr2i[std::array{1, 3}] = 8;
+    arr2i[std::array{0, 2}] = 7;
+    arr2i[std::array{1, 2}] = 8;
 
-//    EXPECT_THAT(arr2i, ElementsAre(ElementsAre(1, 3, 5, 7),
-//                                   ElementsAre(2, 4, 6, 8)));
+    ExpectElementsAre(arr2i, 3, 5, 7, 4, 6, 8);
 }
 
 TEST (ArrayTest, ConstAccessOperator)
@@ -159,10 +157,6 @@ TEST (ArrayTest, ConstAccessOperator)
 
     const md::Array<int, 2, 3> arr2i{{1, 2, 3},
                                      {4, 5, 6}};
-    // dimension wise
-//    EXPECT_EQ(arr2i[0][0], 1);
-//    EXPECT_EQ(arr2i[1][0], 4);
-//    EXPECT_EQ(arr2i[1][2], 6);
 
     // pair
     EXPECT_EQ(arr2i[std::pair(0, 0)], 1);
@@ -201,7 +195,7 @@ TEST (ArrayTest, TotalSize)
                                      {4, 5, 6}};
     EXPECT_EQ(arr2i.total_size(), 6);
 
-    const md::Array<int, 2, 3, 4> arr3i{{{11, 12, 13}, {14, 15, 16}},
+    const md::Array<int, 4, 2, 3> arr3i{{{11, 12, 13}, {14, 15, 16}},
                                         {{21, 22, 23}, {24, 25, 26}},
                                         {{31, 32, 33}, {34, 35, 36}},
                                         {{41, 42, 43}, {44, 45, 46}}};
@@ -217,7 +211,7 @@ TEST (ArrayTest, Dimensions)
                                      {4, 5, 6}};
     EXPECT_EQ(arr2i.dimensions(), 2);
 
-    const md::Array<int, 2, 3, 4> arr3i{{{11, 12, 13}, {14, 15, 16}},
+    const md::Array<int, 4, 2, 3> arr3i{{{11, 12, 13}, {14, 15, 16}},
                                         {{21, 22, 23}, {24, 25, 26}},
                                         {{31, 32, 33}, {34, 35, 36}},
                                         {{41, 42, 43}, {44, 45, 46}}};
