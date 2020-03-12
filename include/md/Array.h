@@ -29,17 +29,17 @@ public:
         init(initializerList, start);
     }
 
-    explicit Array(const std::array<T, TOTAL_SIZE>& other)
+    explicit constexpr Array(const std::array<T, TOTAL_SIZE>& other)
         : _data(other)
     {
     }
 
-    explicit Array(const std::array<T, TOTAL_SIZE>&& other)
+    explicit constexpr Array(const std::array<T, TOTAL_SIZE>&& other)
         : _data(std::move(other))
     {
     }
 
-    explicit operator std::array<T, TOTAL_SIZE>() const
+    explicit constexpr operator std::array<T, TOTAL_SIZE>() const
     {
         return _data;
     }
