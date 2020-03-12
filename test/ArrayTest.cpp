@@ -42,13 +42,41 @@ TEST (ArrayTest, InitEmpty)
 
 TEST (ArrayTest, Init)
 {
+    {
+        const md::Array<int, 3> arr1i{1, 2, 3};
+        EXPECT_THAT(arr1i, ElementsAre(1, 2, 3));
+
+        const md::Array<int, 2, 3> arr2i{{1, 2, 3},
+                                         {4, 5, 6}};
+
+        ExpectElementsAre(arr2i, 1, 2, 3, 4, 5, 6);
+    }
+    {
+        const std::array<int, 6> data{1, 2, 3, 4, 5, 6};
+
+        const md::Array<int, 6> arr1i {data};
+        ExpectElementsAre(arr1i, 1, 2, 3, 4, 5, 6);
+
+        const md::Array<int, 2, 3> arr2i {data};
+        ExpectElementsAre(arr2i, 1, 2, 3, 4, 5, 6);
+    }
+    {
+        const md::Array<int, 6> arr1i {std::array<int, 6>{1, 2, 3, 4, 5, 6}};
+        ExpectElementsAre(arr1i, 1, 2, 3, 4, 5, 6);
+
+        const md::Array<int, 2, 3> arr2i {std::array<int, 6>{1, 2, 3, 4, 5, 6}};
+        ExpectElementsAre(arr2i, 1, 2, 3, 4, 5, 6);
+    }
+}
+
+TEST (ArrayTest, StdArrayCast)
+{
     const md::Array<int, 3> arr1i{1, 2, 3};
-    EXPECT_THAT(arr1i, ElementsAre(1, 2, 3));
+    EXPECT_EQ((static_cast<std::array<int, 3>>(arr1i)), (std::array<int, 3>{1, 2, 3}));
 
     const md::Array<int, 2, 3> arr2i{{1, 2, 3},
                                      {4, 5, 6}};
-
-    ExpectElementsAre(arr2i, 1, 2, 3, 4, 5, 6);
+    EXPECT_EQ((static_cast<std::array<int, 6>>(arr2i)), (std::array<int, 6>{1, 2, 3, 4, 5, 6}));
 }
 
 TEST (ArrayTest, Fill)
