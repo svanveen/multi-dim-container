@@ -108,6 +108,66 @@ public:
         return _data[computeIndex(indexContainer)];
     }
 
+    constexpr typename std::array<T, TOTAL_SIZE>::iterator begin()
+    {
+        return _data.begin();
+    }
+
+    constexpr typename std::array<T, TOTAL_SIZE>::const_iterator begin() const
+    {
+        return _data.begin();
+    }
+
+    constexpr typename std::array<T, TOTAL_SIZE>::const_iterator cbegin() const
+    {
+        return _data.cbegin();
+    }
+
+    constexpr typename std::array<T, TOTAL_SIZE>::iterator end()
+    {
+        return _data.end();
+    }
+
+    constexpr typename std::array<T, TOTAL_SIZE>::const_iterator end() const
+    {
+        return _data.end();
+    }
+
+    constexpr typename std::array<T, TOTAL_SIZE>::const_iterator cend() const
+    {
+        return _data.cend();
+    }
+
+    constexpr typename std::array<T, TOTAL_SIZE>::reverse_iterator rbegin()
+    {
+        return _data.rbegin();
+    }
+
+    constexpr typename std::array<T, TOTAL_SIZE>::const_reverse_iterator rbegin() const
+    {
+        return _data.rbegin();
+    }
+
+    constexpr typename std::array<T, TOTAL_SIZE>::const_reverse_iterator crbegin() const
+    {
+        return _data.crbegin();
+    }
+
+    constexpr typename std::array<T, TOTAL_SIZE>::reverse_iterator rend()
+    {
+        return _data.rend();
+    }
+
+    constexpr typename std::array<T, TOTAL_SIZE>::const_reverse_iterator rend() const
+    {
+        return _data.rend();
+    }
+
+    constexpr typename std::array<T, TOTAL_SIZE>::const_reverse_iterator crend() const
+    {
+        return _data.crend();
+    }
+
     constexpr T* data() noexcept
     {
         return _data.data();
