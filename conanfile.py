@@ -1,19 +1,26 @@
-from conans import CMake, ConanFile, tools
-
+from conans import CMake, ConanFile
 
 class MultiDimContainerConan(ConanFile):
     name = 'multi-dim-container'
     version = '0.1'
-    url = 'https://github.com/svanveen/multi-dim-container'
     author = 'svanveen'
-    description = 'C++ header only library for multi dimensional containers'
 
     default_user = 'svanveen'
-    default_channel = 'development'
+    default_channel = 'stable'
+
+    url = 'https://github.com/svanveen/multi-dim-container.git'
+    description = 'C++ header only library for multi dimensional containers'
+
+    scm = {
+        "type": "git",
+        "url": "auto",
+        "revision": "auto",
+    }
 
     generators = "cmake_paths"
 
     settings = "os", "compiler", "build_type", "arch"
+
     options = {
         "with_tests": [True, False]
     }
@@ -22,7 +29,6 @@ class MultiDimContainerConan(ConanFile):
     }
 
     no_copy_sources = True
-    exports_sources = ["cmake/*", "include/*", "test/*", "CMakeLists.txt"]
 
     def requirements(self):
         if self.options.with_tests:
@@ -39,7 +45,7 @@ class MultiDimContainerConan(ConanFile):
         cmake.build()
 
     def package(self):
-        cmake = self._configure_cmake()
+        cmake = CMake(self)
         cmake.install()
 
     def package_id(self):
