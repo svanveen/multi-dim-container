@@ -24,17 +24,17 @@ target_compile_definitions(multi-dim-container
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-    ${CMAKE_BINARY_DIR}/MultiDimContainerConfigVersion.cmake
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
     COMPATIBILITY AnyNewerVersion
 )
 configure_package_config_file(
-    ${CMAKE_SOURCE_DIR}/cmake/MultiDimContainerConfig.cmake.in
-    ${CMAKE_BINARY_DIR}/MultiDimContainerConfig.cmake
-    INSTALL_DESTINATION lib/cmake/MultiDimContainer
+    ${CMAKE_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
 install(TARGETS multi-dim-container
-    EXPORT MultiDimContainerTargets
+    EXPORT ${PROJECT_NAME}Targets
     LIBRARY DESTINATION lib COMPONENT Runtime
     ARCHIVE DESTINATION lib COMPONENT Development
     RUNTIME DESTINATION bin COMPONENT Runtime
@@ -42,15 +42,15 @@ install(TARGETS multi-dim-container
     BUNDLE DESTINATION bin COMPONENT Runtime
 )
 
-install(EXPORT MultiDimContainerTargets
-    NAMESPACE MultiDimContainer::
-    DESTINATION lib/cmake/MultiDimContainer
+install(EXPORT ${PROJECT_NAME}Targets
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
 install(FILES
-    ${CMAKE_BINARY_DIR}/MultiDimContainerConfigVersion.cmake
-    ${CMAKE_BINARY_DIR}/MultiDimContainerConfig.cmake
-    DESTINATION lib/cmake/MultiDimContainer
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include)
