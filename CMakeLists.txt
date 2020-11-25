@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project(MultiDimContainer VERSION 0.1)
+project(MultiDimContainer VERSION 0.2)
 
 include(${CMAKE_BINARY_DIR}/conan_paths.cmake OPTIONAL)
 

@@ -2,7 +2,7 @@ from conans import CMake, ConanFile
 
 class MultiDimContainerConan(ConanFile):
     name = 'multi-dim-container'
-    version = '0.1'
+    version = '0.2'
     author = 'svanveen'
 
     default_user = 'svanveen'
