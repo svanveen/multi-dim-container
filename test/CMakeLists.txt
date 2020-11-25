@@ -7,13 +7,16 @@ add_executable(container-test)
 
 target_sources(container-test
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/ArrayTest.cpp
+        main.cpp
+        ArrayTest.cpp
 )
-
 
 target_link_libraries(container-test
     PRIVATE
         GTest::GTest
         multi-dim-container
+)
+
+install(TARGETS container-test
+    RUNTIME DESTINATION test
 )

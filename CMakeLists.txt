@@ -35,11 +35,6 @@ configure_package_config_file(
 
 install(TARGETS multi-dim-container
     EXPORT ${PROJECT_NAME}Targets
-    LIBRARY DESTINATION lib COMPONENT Runtime
-    ARCHIVE DESTINATION lib COMPONENT Development
-    RUNTIME DESTINATION bin COMPONENT Runtime
-    PUBLIC_HEADER DESTINATION include COMPONENT Development
-    BUNDLE DESTINATION bin COMPONENT Runtime
 )
 
 install(EXPORT ${PROJECT_NAME}Targets
@@ -56,7 +51,6 @@ install(FILES
 install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/ DESTINATION include)
 
 option(WITH_TESTS "Build library including tests" off)
-
 if(WITH_TESTS)
     add_subdirectory(test)
 endif()
