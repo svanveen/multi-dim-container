@@ -48,6 +48,10 @@ class MultiDimContainerConan(ConanFile):
         cmake = CMake(self)
         cmake.install()
 
+    def package_info(self):
+        self.cpp_info.name = "MultiDimContainer"
+        self.cpp_info.components["lib"].name = self.name
+
     def package_id(self):
         if not self.options.with_tests:
             self.info.header_only()
